@@ -23,7 +23,7 @@
                     }
                    
 
-                <form id="formAuthentication" class="mb-3" method="POST">
+                <form id="formAuthentication" class="mb-3" method="post" action="/Authentication/Login/">
                     <div class="mb-3 card-title">
 
                         <h3 style="color:#1f2829;">Login Page </h3>
@@ -32,12 +32,12 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
+                        <label for="email" class="form-label">Username </label>
                         <input type="text"
                                class="form-control"
-                               id="mail"
-                               name="mail"
-                               placeholder="Email...."
+                               id="username"
+                               name="username"
+                               placeholder="Username...."
                                autofocus  required/>
                     </div>
                     <div class="mb-3 form-password-toggle">
@@ -57,7 +57,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <button class="btn btn-primary d-grid w-100" style="background-color: #1f2829; border-color: #1f2829; " type="submit">Login</button>
+                        <button class="btn btn-primary d-grid w-100" style="background-color: #1f2829; border-color: #1f2829;" type="submit">Login</button>
                     </div>
 
                     <div class="text-center">

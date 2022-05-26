@@ -18,12 +18,46 @@ namespace TimeSheetManagement.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("TimeSheetManagement.Models.User", b =>
+            modelBuilder.Entity("TimeSheetManagement.Models.Task", b =>
                 {
-                    b.Property<int>("user_id")
+                    b.Property<int>("TaskId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ScheduledHour")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ScheduledMin")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ScheduledTime")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TaskDesc")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TaskName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TaskProcess")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TimeSpent")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Username")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("TaskId");
+
+                    b.ToTable("Tasks");
+                });
+
+            modelBuilder.Entity("TimeSheetManagement.Models.User", b =>
+                {
+                    b.Property<string>("username")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("mail")
                         .HasColumnType("nvarchar(110)")
@@ -33,7 +67,7 @@ namespace TimeSheetManagement.Migrations
                         .HasColumnType("nvarchar(200)")
                         .HasMaxLength(200);
 
-                    b.HasKey("user_id");
+                    b.HasKey("username");
 
                     b.ToTable("Users");
                 });

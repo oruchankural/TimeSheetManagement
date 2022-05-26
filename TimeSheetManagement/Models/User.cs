@@ -12,12 +12,12 @@ namespace TimeSheetManagement.Models
         /*------------------ Error Message ları validasyon mesajları olarak girin , asp-validation-for da kullanacağız size bırakıyorum bu tarafı veya client-side validation
          yapılabilir FluentValidation vs ------------------*/
         [Key]
-        public int user_id { get; set; }
+        public string username { get; set; }
 
-        [MaxLength(110, ErrorMessage = "")]
+        [MaxLength(110, ErrorMessage = "110")]
         public string mail { get; set; }
 
-        [MaxLength(200, ErrorMessage = "")]
+        [MaxLength(200, ErrorMessage = "200 char")]
         public string password { get; set; }
     }
 }

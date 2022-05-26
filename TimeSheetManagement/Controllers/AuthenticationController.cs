@@ -27,6 +27,7 @@ namespace TimeSheetManagement.Controllers
             _config = configuration;
             
         }
+        /*--- Login ---*/
         [AllowAnonymous]
         [HttpGet]
         public IActionResult Login(string Response)
@@ -39,10 +40,53 @@ namespace TimeSheetManagement.Controllers
             {
                 ViewBag.Response = null;
             }
-
+           
             return View();
         }
 
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<IActionResult> Login(User p)
+        {
+            var logedUser = c.Users.FirstOrDefault(x => x.username == p.username);
+            if (logedUser != null)
+            {
+                // Hashing Down !
+                bool isValidPass = BCrypt.Net.BCrypt.Verify(p.password, logedUser.password);
+
+                if (logedUser != null && isValidPass)
+                {
+                    var claims = new List<Claim>{
+                    new Claim(ClaimTypes.Name,p.username)
+                    };
+                    var useridentity = new ClaimsIdentity(claims, "Login");
+                    ClaimsPrincipal principal = new ClaimsPrincipal(useridentity);
+                    await HttpContext.SignInAsync(principal);
+
+                    return RedirectToAction("Index", "Dashboard");
+                }
+                else
+                {
+
+                    return RedirectToAction("Login", new { Response = "Wrong Username or Password !" });
+                }
+            }
+
+
+            else
+            {
+                return RedirectToAction("Login", new { Response = "An error occured !" });
+
+
+            }
+
+        }
+        /*--- Login End ---*/
+
+
+
+
+        /*--- SignUp ---*/
         [AllowAnonymous]
         [HttpGet]
         public IActionResult SignUp(string Response)
@@ -63,56 +107,50 @@ namespace TimeSheetManagement.Controllers
         [HttpPost]
         public IActionResult SignUp(User p)
         {
-            var foundedUser = c.Users.FirstOrDefault(x => x.mail == p.mail);
+            var foundedUser = c.Users.FirstOrDefault(x => x.mail == p.mail || x.username == p.username);
             if(foundedUser == null)
             {
                 // Hashing Up !
                 p.password = BCrypt.Net.BCrypt.HashPassword(p.password);
                 c.Users.Add(p);
                 c.SaveChanges();
-                return RedirectToAction("Login", new { Response = ""+p.mail+" your account created succesfully" });
+                return RedirectToAction("Login", new { Response = ""+p.username+" your account created succesfully" });
             }
-            return RedirectToAction("Login", new { Response = ""+p.mail+" this email is already used by another user." });
-
-        }
-
-        [AllowAnonymous]
-        [HttpPost]
-        public async Task<IActionResult> Login(User p)
-        {
-            var logedUser = c.Users.FirstOrDefault(x => x.mail == p.mail);
-            if (logedUser != null)
+            else
             {
-                // Hashing Down !
-                bool isValidPass = BCrypt.Net.BCrypt.Verify(p.password, logedUser.password);
-
-                if (logedUser != null && isValidPass)
+                if(c.Users.Where(x=>x.username == p.username && x.mail == p.mail).Count() > 0 )
                 {
-                    var claims = new List<Claim>{
-                    new Claim(ClaimTypes.Name,p.mail)
-                    };
-                    var useridentity = new ClaimsIdentity(claims, "Login");
-                    ClaimsPrincipal principal = new ClaimsPrincipal(useridentity);
-                    await HttpContext.SignInAsync(principal);
+                   // mail ve username aynı !
 
-                    return RedirectToAction("Index", "Dashboard");
                 }
                 else
                 {
+                    string Response = "";
+                    if(c.Users.Where(x => x.username == p.username).Count() > 0)
+                    {
+                        //
+                        Response += "Username aynı";
+                    }
+                    if(c.Users.Where(x => x.mail == p.mail).Count() > 0)
+                    {
+                        //
+                        Response += "Mail  aynı";
+                    }
 
-                    return RedirectToAction("Login", new { Response = "Wrong Email or Password !" });
+
+                    
                 }
+              
+                return RedirectToAction("SignUp", new { Response = "" + p.mail + " this email is already used by another user." });
             }
-
-
-            else
-            {
-                return RedirectToAction("Login", new { Response = "An error occured !" });
-
-
-            }
+            
 
         }
+
+       
+
+        /*--- SignUp End---*/
+
 
 
 
